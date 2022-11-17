@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+	<title> Calculator </title>
+</head>
+<body>
+<form method = 'post' id = 'calculator'>
+	<input type = 'number' step = "1"  id = 'value1' /> 
+	<select id = 'calc'>
+		<option value = '+'>+</option>
+		<option value = '-'>-</option>
+		<option value = '*'>*</option>
+		<option value = '/'>/</option>
+	</select>
+	<input type = 'number' step = "1"  id = 'value2' /> 
+	<input type = 'submit' value = 'Посчитать' name = 'btn'/>
+    <span id = 'message'></span>
+</form>
+<script type="text/javascript">
+    var form = document.getElementById('calculator');
+    
+    form.addEventListener('submit', function(event) {
+       event.preventDefault(); 
+
+        var request = new XMLHttpRequest();
+        request.open('POST', 'Calculator.php', true);
+        request.setRequestHeader('Content-Type', 'application/json');
+
+       var a = document.getElementById('value1').value;
+       var op = document.getElementById('calc').value;
+       var b = document.getElementById('value2').value;
+       var rez = document.getElementById('message');
+       
+       var data = JSON.stringify({
+            'a' : a,
+            'op' : op,
+            'b' : b
+        });
+        request.send(data);
+        console.log(data);
+        
+        request.onreadystatechange = function () {
+            if (request.readyState === 4 && request.status === 200) {
+                console.warn(request.responseText);
+                var jsonStatus = JSON.parse(request.responseText);
+                console.log(jsonStatus);
+                rez.innerHTML = JSON.stringify(jsonStatus);
+            }
+        };
+    });
+</script>
+</body>
+</html>
